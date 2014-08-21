@@ -148,6 +148,7 @@ static char ja_kvoContext;
     self.shouldDelegateAutorotateToVisiblePanel = YES;
     self.allowRightSwipe = YES;
     self.allowLeftSwipe = YES;
+	self.keepSidePanelOpenAfterChangingCenterPanel = NO;
 }
 
 #pragma mark - UIViewController
@@ -360,7 +361,7 @@ static char ja_kvoContext;
             self.visiblePanel = _centerPanel;
         }
     }
-    if (self.isViewLoaded && self.state == JASidePanelCenterVisible) {
+    if (self.isViewLoaded && (self.state == JASidePanelCenterVisible || self.keepSidePanelOpenAfterChangingCenterPanel)) {
         [self _swapCenter:previous previousState:0 with:_centerPanel];
     } else if (self.isViewLoaded) {
         // update the state immediately to prevent user interaction on the side panels while animating
