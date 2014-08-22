@@ -184,7 +184,7 @@ static char ja_kvoContext;
     // ensure correct view dimensions
     [self _layoutSideContainers:NO duration:0.0f];
     [self _layoutSidePanels];
-    self.centerPanelContainer.frame = [self _adjustCenterFrame];
+	[self ja_setCenterPanelFrame:[self _adjustCenterFrame]];
     [self styleContainer:self.centerPanelContainer animate:NO duration:0.0f];
 }
 
@@ -229,14 +229,14 @@ static char ja_kvoContext;
 #endif
 
 - (void)willAnimateRotationToInterfaceOrientation:(__unused UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    self.centerPanelContainer.frame = [self _adjustCenterFrame];	
+	[self ja_setCenterPanelFrame:[self _adjustCenterFrame]];
     [self _layoutSideContainers:YES duration:duration];
     [self _layoutSidePanels];
     [self styleContainer:self.centerPanelContainer animate:YES duration:duration];
     if (self.centerPanelHidden) {
         CGRect frame = self.centerPanelContainer.frame;
         frame.origin.x = self.state == JASidePanelLeftVisible ? self.centerPanelContainer.frame.size.width : -self.centerPanelContainer.frame.size.width;
-        self.centerPanelContainer.frame = frame;
+		[self ja_setCenterPanelFrame:frame];
     }
 }
 
@@ -302,7 +302,7 @@ static char ja_kvoContext;
 - (void)_configureContainers {
     self.leftPanelContainer.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
     self.rightPanelContainer.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
-    self.centerPanelContainer.frame =  self.view.bounds;
+	[self ja_setCenterPanelFrame:self.view.bounds];
     self.centerPanelContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 
@@ -373,7 +373,7 @@ static char ja_kvoContext;
                 CGFloat x = (previousState == JASidePanelLeftVisible) ? self.view.bounds.size.width : -self.view.bounds.size.width;
                 _centerPanelRestingFrame.origin.x = x;
             }
-            self.centerPanelContainer.frame = _centerPanelRestingFrame;
+			[self ja_setCenterPanelFrame:_centerPanelRestingFrame];
         } completion:^(__unused BOOL finished) {
             [self _swapCenter:previous previousState:previousState with:_centerPanel];
             [self _showCenterPanel:YES bounce:NO];
@@ -501,8 +501,8 @@ static char ja_kvoContext;
         if (self.style == JASidePanelMultipleActive) {
             frame.size.width = self.view.bounds.size.width - frame.origin.x;
         }
-        
-        self.centerPanelContainer.frame = frame;
+		
+		[self ja_setCenterPanelFrame:frame];
         
         // if center panel has focus, make sure correct side panel is revealed
         if (self.state == JASidePanelCenterVisible) {
@@ -665,14 +665,14 @@ static char ja_kvoContext;
             case JASidePanelLeftVisible: {
                 CGRect frame = self.centerPanelContainer.frame;
                 frame.size.width = self.view.bounds.size.width;
-                self.centerPanelContainer.frame = frame;
+				[self ja_setCenterPanelFrame:frame];
                 break;
             }
             case JASidePanelRightVisible: {
                 CGRect frame = self.centerPanelContainer.frame;
                 frame.size.width = self.view.bounds.size.width;
                 frame.origin.x = -self.rightVisibleWidth;
-                self.centerPanelContainer.frame = frame;
+				[self ja_setCenterPanelFrame:frame];
                 break;
             }
             default:
@@ -742,7 +742,7 @@ static char ja_kvoContext;
     
     CGFloat duration = [self _calculatedDuration];
     [UIView animateWithDuration:duration delay:0.0f options:UIViewAnimationOptionCurveLinear|UIViewAnimationOptionLayoutSubviews animations:^{
-        self.centerPanelContainer.frame = _centerPanelRestingFrame;
+		[self ja_setCenterPanelFrame:_centerPanelRestingFrame];
         [self styleContainer:self.centerPanelContainer animate:YES duration:duration];
         if (self.style == JASidePanelMultipleActive || self.pushesSidePanels) {
             [self _layoutSideContainers:NO duration:0.0f];
@@ -761,10 +761,10 @@ static char ja_kvoContext;
             [UIView animateWithDuration:self.bounceDuration delay:0.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
                 CGRect bounceFrame = _centerPanelRestingFrame;
                 bounceFrame.origin.x += bounceDistance;
-                self.centerPanelContainer.frame = bounceFrame;
+				[self ja_setCenterPanelFrame:bounceFrame];
             } completion:^(__unused BOOL finished2) {
                 [UIView animateWithDuration:self.bounceDuration delay:0.0f options:UIViewAnimationOptionCurveEaseIn animations:^{
-                    self.centerPanelContainer.frame = _centerPanelRestingFrame;				
+					[self ja_setCenterPanelFrame:_centerPanelRestingFrame];
                 } completion:completion];
             }];
         } else if (completion) {
@@ -803,6 +803,12 @@ static char ja_kvoContext;
     }
     _centerPanelRestingFrame = frame;
     return _centerPanelRestingFrame;
+}
+
+- (void)ja_setCenterPanelFrame:(CGRect)frame
+{
+//	NSLog(@"Changing center frame from %@ to %@", NSStringFromCGRect(self.centerPanelContainer.frame), NSStringFromCGRect(frame));
+	self.centerPanelContainer.frame = frame;
 }
 
 - (CGFloat)leftVisibleWidth {
@@ -879,7 +885,7 @@ static char ja_kvoContext;
             [self _unloadPanels];
         }];
     } else {
-        self.centerPanelContainer.frame = _centerPanelRestingFrame;	
+		[self ja_setCenterPanelFrame:_centerPanelRestingFrame];
         [self styleContainer:self.centerPanelContainer animate:NO duration:0.0f];
         if (self.style == JASidePanelMultipleActive || self.pushesSidePanels) {
             [self _layoutSideContainers:NO duration:0.0f];
