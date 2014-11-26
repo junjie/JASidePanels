@@ -774,10 +774,20 @@ static char ja_kvoContext;
             } completion:^(__unused BOOL finished2) {
                 [UIView animateWithDuration:self.bounceDuration delay:0.0f options:UIViewAnimationOptionCurveEaseIn animations:^{
 					[self ja_setCenterPanelFrame:_centerPanelRestingFrame];
-                } completion:completion];
+                } completion:^(BOOL finished) {
+					if (completion != NULL)
+					{
+						completion(finished);
+					}
+					[self didFinishAnimatingCenterPanel];
+				}];
             }];
-        } else if (completion) {
-            completion(finished);
+        } else {
+			if (completion != NULL)
+			{
+				completion(finished);
+			}
+			[self didFinishAnimatingCenterPanel];
         }
     }];
 }
@@ -1054,6 +1064,11 @@ static char ja_kvoContext;
             }];
         }
     }
+}
+
+- (void)didFinishAnimatingCenterPanel
+{
+	// Nothing
 }
 
 @end
