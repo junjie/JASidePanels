@@ -36,6 +36,25 @@ typedef enum _JASidePanelState {
     JASidePanelRightVisible
 } JASidePanelState;
 
+JASidePanelStyle const JADefaultSidePanelStyle;
+CGFloat const JADefaultLeftGapPercentage;
+CGFloat const JADefaultRightGapPercentage;
+CGFloat const JADefaultMinimumMovePercentage;
+CGFloat const JADefaultMaximumAnimationDuration;
+CGFloat const JADefaultBounceDuration;
+CGFloat const JADefaultBouncePercentage;
+BOOL const JADefaultPanningLimitedToTopViewController;
+BOOL const JADefaultRecognizesPanGesture;
+BOOL const JADefaultAllowLeftOverpan;
+BOOL const JADefaultAllowRightOverpan;
+BOOL const JADefaultBounceOnSidePanelOpen;
+BOOL const JADefaultBounceOnSidePanelClose;
+BOOL const JADefaultBounceOnCenterPanelChange;
+BOOL const JADefaultShouldDelegateAutorotateToVisiblePanel;
+BOOL const JADefaultAllowRightSwipe;
+BOOL const JADefaultAllowLeftSwipe;
+BOOL const JADefaultKeepSidePanelOpenAfterChangingCenterPanel;
+
 @interface JASidePanelController : UIViewController<UIGestureRecognizerDelegate>
 
 #pragma mark - Usage

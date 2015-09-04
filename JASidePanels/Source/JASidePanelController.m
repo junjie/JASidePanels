@@ -26,6 +26,25 @@
 #import <QuartzCore/QuartzCore.h>
 #import "JASidePanelController.h"
 
+JASidePanelStyle const JADefaultSidePanelStyle = JASidePanelSingleActive;
+CGFloat const JADefaultLeftGapPercentage = 0.8;
+CGFloat const JADefaultRightGapPercentage = 0.8;
+CGFloat const JADefaultMinimumMovePercentage = 0.15;
+CGFloat const JADefaultMaximumAnimationDuration = 0.2;
+CGFloat const JADefaultBounceDuration = 0.1;
+CGFloat const JADefaultBouncePercentage = 0.075;
+BOOL const JADefaultPanningLimitedToTopViewController = YES;
+BOOL const JADefaultRecognizesPanGesture = YES;
+BOOL const JADefaultAllowLeftOverpan = YES;
+BOOL const JADefaultAllowRightOverpan = YES;
+BOOL const JADefaultBounceOnSidePanelOpen = YES;
+BOOL const JADefaultBounceOnSidePanelClose = NO;
+BOOL const JADefaultBounceOnCenterPanelChange = YES;
+BOOL const JADefaultShouldDelegateAutorotateToVisiblePanel = YES;
+BOOL const JADefaultAllowRightSwipe = YES;
+BOOL const JADefaultAllowLeftSwipe = YES;
+BOOL const JADefaultKeepSidePanelOpenAfterChangingCenterPanel = NO;
+
 static char ja_kvoContext;
 
 @interface JASidePanelController() {
@@ -131,24 +150,24 @@ static char ja_kvoContext;
 }
 
 - (void)_baseInit {
-    self.style = JASidePanelSingleActive;
-    self.leftGapPercentage = 0.8f;
-    self.rightGapPercentage = 0.8f;
-    self.minimumMovePercentage = 0.15f;
-    self.maximumAnimationDuration = 0.2f;
-    self.bounceDuration = 0.1f;
-    self.bouncePercentage = 0.075f;
-    self.panningLimitedToTopViewController = YES;
-    self.recognizesPanGesture = YES;
-    self.allowLeftOverpan = YES;
-    self.allowRightOverpan = YES;
-    self.bounceOnSidePanelOpen = YES;
-    self.bounceOnSidePanelClose = NO;
-    self.bounceOnCenterPanelChange = YES;
-    self.shouldDelegateAutorotateToVisiblePanel = YES;
-    self.allowRightSwipe = YES;
-    self.allowLeftSwipe = YES;
-	self.keepSidePanelOpenAfterChangingCenterPanel = NO;
+    self.style = JADefaultSidePanelStyle;
+    self.leftGapPercentage = JADefaultLeftGapPercentage;
+    self.rightGapPercentage = JADefaultRightGapPercentage;
+    self.minimumMovePercentage = JADefaultMinimumMovePercentage;
+    self.maximumAnimationDuration = JADefaultMaximumAnimationDuration;
+    self.bounceDuration = JADefaultBounceDuration;
+    self.bouncePercentage = JADefaultBouncePercentage;
+    self.panningLimitedToTopViewController = JADefaultPanningLimitedToTopViewController;
+    self.recognizesPanGesture = JADefaultRecognizesPanGesture;
+    self.allowLeftOverpan = JADefaultAllowLeftOverpan;
+    self.allowRightOverpan = JADefaultAllowRightOverpan;
+    self.bounceOnSidePanelOpen = JADefaultBounceOnSidePanelOpen;
+    self.bounceOnSidePanelClose = JADefaultBounceOnSidePanelClose;
+    self.bounceOnCenterPanelChange = JADefaultBounceOnCenterPanelChange;
+    self.shouldDelegateAutorotateToVisiblePanel = JADefaultShouldDelegateAutorotateToVisiblePanel;
+    self.allowRightSwipe = JADefaultAllowRightSwipe;
+    self.allowLeftSwipe = JADefaultAllowLeftSwipe;
+	self.keepSidePanelOpenAfterChangingCenterPanel = JADefaultKeepSidePanelOpenAfterChangingCenterPanel;
 }
 
 #pragma mark - UIViewController
@@ -487,6 +506,19 @@ static char ja_kvoContext;
 }
 
 #pragma mark - Pan Gestures
+
+- (void)setRecognizesPanGesture:(BOOL)recognizesPanGesture
+{
+	if (_recognizesPanGesture != recognizesPanGesture)
+	{
+		_recognizesPanGesture = recognizesPanGesture;
+		
+		if (self.centerPanel.isViewLoaded && recognizesPanGesture)
+		{
+			[self _addPanGestureToView:self.centerPanel.view];
+		}
+	}
+}
 
 - (void)_addPanGestureToView:(UIView *)view {
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_handlePan:)];
