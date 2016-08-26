@@ -36,24 +36,24 @@ typedef enum _JASidePanelState {
     JASidePanelRightVisible
 } JASidePanelState;
 
-JASidePanelStyle const JADefaultSidePanelStyle;
-CGFloat const JADefaultLeftGapPercentage;
-CGFloat const JADefaultRightGapPercentage;
-CGFloat const JADefaultMinimumMovePercentage;
-CGFloat const JADefaultMaximumAnimationDuration;
-CGFloat const JADefaultBounceDuration;
-CGFloat const JADefaultBouncePercentage;
-BOOL const JADefaultPanningLimitedToTopViewController;
-BOOL const JADefaultRecognizesPanGesture;
-BOOL const JADefaultAllowLeftOverpan;
-BOOL const JADefaultAllowRightOverpan;
-BOOL const JADefaultBounceOnSidePanelOpen;
-BOOL const JADefaultBounceOnSidePanelClose;
-BOOL const JADefaultBounceOnCenterPanelChange;
-BOOL const JADefaultShouldDelegateAutorotateToVisiblePanel;
-BOOL const JADefaultAllowRightSwipe;
-BOOL const JADefaultAllowLeftSwipe;
-BOOL const JADefaultKeepSidePanelOpenAfterChangingCenterPanel;
+extern JASidePanelStyle const JADefaultSidePanelStyle;
+extern CGFloat const JADefaultLeftGapPercentage;
+extern CGFloat const JADefaultRightGapPercentage;
+extern CGFloat const JADefaultMinimumMovePercentage;
+extern CGFloat const JADefaultMaximumAnimationDuration;
+extern CGFloat const JADefaultBounceDuration;
+extern CGFloat const JADefaultBouncePercentage;
+extern BOOL const JADefaultPanningLimitedToTopViewController;
+extern BOOL const JADefaultRecognizesPanGesture;
+extern BOOL const JADefaultAllowLeftOverpan;
+extern BOOL const JADefaultAllowRightOverpan;
+extern BOOL const JADefaultBounceOnSidePanelOpen;
+extern BOOL const JADefaultBounceOnSidePanelClose;
+extern BOOL const JADefaultBounceOnCenterPanelChange;
+extern BOOL const JADefaultShouldDelegateAutorotateToVisiblePanel;
+extern BOOL const JADefaultAllowRightSwipe;
+extern BOOL const JADefaultAllowLeftSwipe;
+extern BOOL const JADefaultKeepSidePanelOpenAfterChangingCenterPanel;
 
 @interface JASidePanelController : UIViewController<UIGestureRecognizerDelegate>
 
