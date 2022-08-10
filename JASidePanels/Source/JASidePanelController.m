@@ -247,16 +247,22 @@ static char ja_kvoContext;
 
 #endif
 
-- (void)willAnimateRotationToInterfaceOrientation:(__unused UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[self ja_setCenterPanelFrame:[self _adjustCenterFrame]];
-    [self _layoutSideContainers:YES duration:duration];
-    [self _layoutSidePanels];
-    [self styleContainer:self.centerPanelContainer animate:YES duration:duration];
-    if (self.centerPanelHidden) {
-        CGRect frame = self.centerPanelContainer.frame;
-        frame.origin.x = self.state == JASidePanelLeftVisible ? self.centerPanelContainer.frame.size.width : -self.centerPanelContainer.frame.size.width;
-		[self ja_setCenterPanelFrame:frame];
-    }
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        CGRect newFrame = self.view.frame;
+        newFrame.size = size;
+        [self ja_setCenterPanelFrame:[self _adjustCenterFrame:newFrame]];
+        [self _layoutSideContainers:YES duration:context.transitionDuration frame:newFrame];
+        [self _layoutSidePanels];
+        [self styleContainer:self.centerPanelContainer animate:YES duration:context.transitionDuration];
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        if (self.centerPanelHidden) {
+            CGRect frame = self.centerPanelContainer.frame;
+            frame.origin.x = self.state == JASidePanelLeftVisible ? self.centerPanelContainer.frame.size.width : -self.centerPanelContainer.frame.size.width;
+            [self ja_setCenterPanelFrame:frame];
+        }
+    }];
 }
 
 #pragma mark - State
@@ -326,8 +332,12 @@ static char ja_kvoContext;
 }
 
 - (void)_layoutSideContainers:(BOOL)animate duration:(NSTimeInterval)duration {
-    CGRect leftFrame = self.view.bounds;
-    CGRect rightFrame = self.view.bounds;
+    [self _layoutSideContainers:animate duration:duration frame:self.view.bounds];
+}
+
+- (void)_layoutSideContainers:(BOOL)animate duration:(NSTimeInterval)duration frame:(CGRect)frame {
+    CGRect leftFrame = frame;
+    CGRect rightFrame = frame;
     if (self.style == JASidePanelMultipleActive) {
         // left panel container
         leftFrame.size.width = self.leftVisibleWidth;
@@ -833,6 +843,10 @@ static char ja_kvoContext;
 
 - (CGRect)_adjustCenterFrame {
     CGRect frame = self.view.bounds;
+    return [self _adjustCenterFrame:frame];
+}
+
+- (CGRect)_adjustCenterFrame:(CGRect)frame {
     switch (self.state) {
         case JASidePanelCenterVisible: {
             frame.origin.x = 0.0f;
